@@ -48,7 +48,7 @@
       const allergies = allergiesInput.value;
 
       try {
-        const response = await fetch(`http://localhost:4000/recipe?ingredients=${encodeURIComponent(ingredients)}&cuisine=${encodeURIComponent(cuisine)}&allergies=${encodeURIComponent(allergies)}`);
+        const response = await fetch(`/recipe?ingredients=${encodeURIComponent(ingredients)}&cuisine=${encodeURIComponent(cuisine)}&allergies=${encodeURIComponent(allergies)}`);
         const data = await response.json();
         const recipe = data.recipe;
         recipeResult.innerText = `${recipe}`;

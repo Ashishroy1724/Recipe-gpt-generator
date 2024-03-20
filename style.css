@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.input-box,
+.output-box {
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.input-box {
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.input-box input:focus {
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.output-box {
+  margin-top: 20px;
+}
+
+.output-header {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
+}
+
+input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px; /* Added margin for better spacing */
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#recipeResult {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #4f4d4d;
+}
+
+/* Media Queries */
+@media screen and (min-width: 600px) {
+  .input-box,
+  .output-box {
+    width: 48%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .input-box {
+    width: 30%;
+  }
+
+  .output-box {
+    width: 68%;
+    margin-left: 2%;
+  }
+}
+
+/* Small screens (e.g., mobile) */
+@media screen and (max-width: 480px) {
+  .input-box,
+  .output-box {
+    width: 100%;
+  }
+
+  .output-header button {
+    width: 100%; /* Full width for buttons on smaller screens */
+    margin-top: 10px;
+  }
+}
+

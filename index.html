@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="input-box">
+      <h1>Recipe Generator</h1>
+      <label for="ingredients">Enter available ingredients:</label>
+      <input type="text" id="ingredients" placeholder="e.g., chicken, tomatoes, pasta">
+      <label for="cuisine">Cuisine:</label>
+      <input type="text" id="cuisine" placeholder="e.g., Indian, Italian, American">
+      <label for="allergies">Allergies:</label>
+      <input type="text" id="allergies" placeholder="e.g., milk, eggs, fish">
+      <button onclick="generateRecipe()">Generate Recipe</button>
+      <button onclick="clearRecipe()">Clear</button>
+      <button onclick="startVoiceRecognition()">Start Voice Recognition</button>
+    </div>
+    <div class="output-box">
+      <div class="output-header">
+        <h2>Generated Recipe</h2>
+        <button onclick="generateAnotherRecipe()">Generate Another Recipe</button>
+        <button onclick="speakRecipe()">Read Recipe</button>
+        <button onclick="pauseSpeech()">Pause</button>
+        <button onclick="playSpeech()">Play</button>
+        <button onclick="stopSpeech()">Stop</button>
+      </div>
+      <p id="recipeResult"></p>
+    </div>
+  </div>
+
+  <script>
+    let speech;
+    let recognition;
+
+    async function generateRecipe() {
+      const ingredientsInput = document.getElementById('ingredients');
+      const cuisineInput = document.getElementById('cuisine');
+      const allergiesInput = document.getElementById('allergies');
+      const recipeResult = document.getElementById('recipeResult');
+
+      const ingredients = ingredientsInput.value;
+      const cuisine = cuisineInput.value;
+      const allergies = allergiesInput.value;
+
+      try {
+        const response = await fetch(`http://localhost:4000/recipe?ingredients=${encodeURIComponent(ingredients)}&cuisine=${encodeURIComponent(cuisine)}&allergies=${encodeURIComponent(allergies)}`);
+        const data = await response.json();
+        const recipe = data.recipe;
+        recipeResult.innerText = `${recipe}`;
+      } catch (error) {
+        console.error(error);
+        recipeResult.innerText = 'Failed to generate recipe';
+      }
+
+      // Stop recognition when generating a new recipe
+      stopVoiceRecognition();
+    }
+
+    function clearRecipe() {
+      const recipeResult = document.getElementById('recipeResult');
+      const ingredientsInput = document.getElementById('ingredients');
+      const cuisineInput = document.getElementById('cuisine');
+      const allergiesInput = document.getElementById('allergies');
+
+      recipeResult.innerText = '';  // Clear the content
+      ingredientsInput.value = '';  // Clear the input value
+      cuisineInput.value = '';      // Clear the input value
+      allergiesInput.value = '';    // Clear the input value
+
+      // Stop speech when clearing recipe
+      stopSpeech();
+
+      // Stop recognition when clearing the recipe
+      stopVoiceRecognition();
+    }
+
+    function generateAnotherRecipe() {
+      const recipeResult = document.getElementById('recipeResult');
+      recipeResult.innerText = '';  // Clear only the generated recipe
+      generateRecipe();  // Generate a new recipe
+
+      // Stop recognition when generating another recipe
+      stopVoiceRecognition();
+    }
+
+    function speakRecipe() {
+      const recipeResult = document.getElementById('recipeResult');
+      speech = new SpeechSynthesisUtterance(recipeResult.innerText);
+      window.speechSynthesis.speak(speech);
+
+      // Stop recognition when starting TTS
+      stopVoiceRecognition();
+    }
+
+    function pauseSpeech() {
+      if (speech) {
+        window.speechSynthesis.pause();
+      }
+    }
+
+    function playSpeech() {
+      if (speech) {
+        window.speechSynthesis.resume();
+      }
+    }
+
+    function stopSpeech() {
+      if (speech) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function startVoiceRecognition() {
+  recognition = new webkitSpeechRecognition();
+  recognition.onresult = (event) => {
+    const command = event.results[0][0].transcript.toLowerCase();
+
+    switch (command) {
+      case "pause":
+        pauseSpeech();
+        break;
+      case "play":
+        playSpeech();
+        break;
+      case "stop":
+        stopSpeech();
+        break;
+    }
+  };
+
+  recognition.start();
+}
+  </script>
+</body>
+</html>

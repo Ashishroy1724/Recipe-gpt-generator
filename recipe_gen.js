@@ -7,6 +7,9 @@ app.use(cors());
 
 const API_KEY = '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'; 
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/recipe', async (req, res) => {
   try {
     const userInput = req.query.ingredients;
